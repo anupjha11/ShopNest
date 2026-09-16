@@ -1,0 +1,13 @@
+$kind: http-request
+name: ADMIN -- GET ALL USERS
+url: "{{endpoint}}/api/auth/users"
+method: GET
+body:
+  type: json
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: ""
+settings: {}
+order: 5000

@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{endpoint}}/api/products/"
+method: GET
+body:
+  type: text
+  content: "{\r
+
+    \    \"name\":\"Shivansh\",\r
+
+    \    \"email\": \"user@gmail.com\",\r
+
+    \    \"password\": \"pass123\"\r
+
+    }"
+auth:
+  type: bearer
+  credentials:
+    token: ""
+settings: {}
+order: 1000

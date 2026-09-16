@@ -1,0 +1,36 @@
+$kind: http-request
+name: ADMIN -- Update ORDER Status
+description: |-
+  Generated from cURL: curl --location 'http://localhost:5000/api/orders' \
+  --header 'Authorization: Bearer YOUR_TOKEN_HERE' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "items": [
+      {
+        "productId": "PRODUCT_ID_1",
+        "quantity": 2,
+        "price": 50.00
+      },
+      {
+        "productId": "PRODUCT_ID_2",
+        "quantity": 1,
+        "price": 75.00
+      }
+    ],
+    "totalAmount": 175.00,
+    "address": "123 Main Street, City, Country, 12345",
+    "paymentId": "PAYMENT_ID_12345"
+  }'
+url: http://localhost:5000/api/orders/69e89c7ce26672d7f8d0a6ec/status
+method: PUT
+headers:
+  Authorization: Bearer YOUR_TOKEN_HERE
+  Content-Type: application/json
+body:
+  type: json
+  content: "{\r\n    \"status\": \"shipped\"\r\n}"
+auth:
+  type: bearer
+  credentials:
+    token: ""
+order: 2633

@@ -1,0 +1,48 @@
+$kind: http-request
+name: ADMIN -- Create New Product
+description: "Generated from cURL: curl --location 'http://localhost:5000/api/products' \\\r
+
+  --header 'Authorization: Bearer YOUR_TOKEN_HERE' \\\r
+
+  --form 'name=\"Product Name\"' \\\r
+
+  --form 'description=\"Product Description\"' \\\r
+
+  --form 'price=\"99.99\"' \\\r
+
+  --form 'category=\"Electronics\"' \\\r
+
+  --form 'stock=\"50\"' \\\r
+
+  --form 'image=@\"/path/to/image.jpg\"'"
+url: http://localhost:5000/api/products/
+method: POST
+headers:
+  Authorization: Bearer YOUR_TOKEN_HERE
+body:
+  type: formdata
+  content:
+    - type: text
+      key: name
+      value: Product Name 1
+    - type: text
+      key: description
+      value: "Product Description "
+    - type: text
+      key: price
+      value: "99"
+    - type: text
+      key: category
+      value: Electronics
+    - type: text
+      key: stock
+      value: "50"
+    - type: file
+      key: image
+      src:
+        - /C:/Users/LENOVO/Downloads/244987_2550267.jpg
+auth:
+  type: bearer
+  credentials:
+    token: ""
+order: 3000
