@@ -2,30 +2,68 @@ const orderModel = require('../models/order.model');
 const sendEmail = require('../utils/sendEmail');
 
 //create a new order
-const createOrder = async(req, res) =>{
-    try{
-      const { items, totalAmount, address, paymentId } = req.body;
-      if(!items || items.length==0 || !totalAmount || !address ){
-        return res.status(400).json({message:'Invalid order data'});
+// const createOrder = async(req, res) =>{
+//     try{
+//       const { items, totalAmount, address, paymentId } = req.body;
+//       if(!items || items.length==0 || !totalAmount || !address ){
+//         return res.status(400).json({message:'Invalid order data'});
 
-      }else{
-        const order = new orderModel({
-            user:req.user._id,
-            items,
-            totalAmount,
-            address,
-            paymentId,
-        });
-        await order.save();
+//       }else{
+//         const order = new orderModel({
+//             user:req.user._id,
+//             items,
+//             totalAmount,
+//             address,
+//             paymentId,
+//         });
+//         await order.save();
        
-        const message = `Dear ${req.user.name},\n\n Thank You for your order! Your order has been successfully created with the following detail:\n\n Order Id: ${order._id} \nTotal Amount: $${totalAmount} \nShipping Address:  ${address.street}, ${address.city}, ${address.postalCode}, ${address.country}\n\n We will notify you once your order is shipped.\n\nBest regards,\nShopNest Team`
+//         const message = `Dear ${req.user.name},\n\n Thank You for your order! Your order has been successfully created with the following detail:\n\n Order Id: ${order._id} \nTotal Amount: $${totalAmount} \nShipping Address:  ${address.street}, ${address.city}, ${address.postalCode}, ${address.country}\n\n We will notify you once your order is shipped.\n\nBest regards,\nShopNest Team`
 
-        await sendEmail(req.user.email,'Order Created', message );
-        res.status(201).json({message:'Order created successfully', order});
-      }
-    }catch(error){
-       res.status(500).json({message:'Error creating order', error})
+//         await sendEmail(req.user.email,'Order Created', message );
+//         res.status(201).json({message:'Order created successfully', order});
+//       }
+//     }catch(error){
+//        res.status(500).json({message:'Error creating order', error})
+//     }
+// };
+
+const addOrderItems = async (req, res) => {
+  try {
+    const { items, totalAmount, address, paymentId } = req.body;
+    if (items && items.length === 0) {
+      return res.status(400).json({ message: 'No order items' });
+    } else {
+      const order = new orderModel({
+        user: req.user._id,
+        items,
+        totalAmount,
+        address,
+        paymentId
+      });
+      const createdOrder = await order.save();
+
+      // Send Order Confirmation Email
+      const message = `
+        <h2>Order Confirmation</h2>
+        <p>Hello ${req.user.name},</p>
+        <p>Your order has been successfully placed! Order ID: <strong>${createdOrder._id}</strong></p>
+        <p>Total Amount Paid: $${totalAmount.toFixed(2)}</p>
+        <p>It will be shipped to: ${address.street}, ${address.city}</p>
+        <p>Thank you for shopping with ShopNest!</p>
+      `;
+
+      await sendEmail({
+        email: req.user.email,
+        subject: 'ShopNest - Order Confirmation',
+        message
+      });
+
+      res.status(201).json(createdOrder);
     }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 const myOrders = async(req,res)=>{
@@ -63,5 +101,5 @@ const updateOrderStatus = async (req, res) => {
 };
 
 module.exports = {
-    createOrder, myOrders, getOrders, updateOrderStatus
+    addOrderItems, myOrders, getOrders, updateOrderStatus
 }
